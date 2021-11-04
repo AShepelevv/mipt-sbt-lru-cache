@@ -2,7 +2,6 @@ package ru.ashepelev.lru.concurrent;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.ashepelev.lru.LRUCache;
 
@@ -18,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith({MockitoExtension.class})
 class ConcurrentLRUCacheTest {
     private final static int CACHE_SIZE = 5;
-    @Spy
     private final LRUCache<Integer, Integer> cache = new ConcurrentLRUCache<>(5);
 
     @Test
