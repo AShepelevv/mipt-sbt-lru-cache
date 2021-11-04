@@ -6,22 +6,37 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.ashepelev.lru.LRUCache;
 
-import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static java.util.Optional.empty;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class SequentialLRUCacheTest {
+    private final static int CACHE_SIZE = 5;
     @Spy
-    private final LRUCache<Integer, Integer> cache = new SequentialLRUCache<>(5);
+    private final LRUCache<Integer, Integer> cache = new SequentialLRUCache<>(CACHE_SIZE);
 
     @Test
     void test() {
-        var keys = List.of(1, 2, 3, 2, 3, 4, 1, 1, 1, 1, 1, 5, 6, 7, 8, 9, 1);
-        for (int key : keys) if (cache.get(key).isEmpty()) cache.put(key, key * key);
-        verify(cache, times(10)).put(anyInt(), anyInt());
-        verify(cache, times(17)).get(anyInt());
+        cache.put(1, 1);
+
+        assertEquals(empty(), cache.get(0));
+        assertEquals(Optional.of(1), cache.get(1));
+
+        for (int i = 0; i < CACHE_SIZE; ++i) {
+            cache.put(2, 2);
+        }
+
+        assertEquals(Optional.of(1), cache.get(1));
+        assertEquals(Optional.of(2), cache.get(2));
+
+        cache.put(10, 10);
+
+        for (int i = 0; i < CACHE_SIZE; ++i) {
+            cache.put(i, i);
+        }
+
+        assertEquals(empty(), cache.get(10));
     }
 }
